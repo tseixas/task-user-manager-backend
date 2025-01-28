@@ -1,10 +1,12 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required
 from app.models.task import Task
 
 tasks = Blueprint('tasks', __name__)
 
 
 @tasks.route('/', methods=['POST'])
+@jwt_required()
 def create_task():
     data = request.get_json()
     title = data.get('title')
@@ -20,6 +22,7 @@ def create_task():
 
 
 @tasks.route('/', methods=['GET'])
+@jwt_required()
 def get_tasks():
     tasks = Task.get_all_tasks()
 
@@ -27,6 +30,7 @@ def get_tasks():
 
 
 @tasks.route('/<task_id>', methods=['GET'])
+@jwt_required()
 def get_task(task_id):
     task = Task.get_task_by_id(task_id)
 
@@ -37,6 +41,7 @@ def get_task(task_id):
 
 
 @tasks.route('/<task_id>', methods=['PUT'])
+@jwt_required()
 def update_task(task_id):
     data = request.get_json()
     title = data.get('title')
@@ -53,6 +58,7 @@ def update_task(task_id):
 
 
 @tasks.route('/<task_id>', methods=['DELETE'])
+@jwt_required()
 def delete_task(task_id):
     if Task.delete_task(task_id):
         return jsonify({'message': 'Task deleted successfully'}), 200
