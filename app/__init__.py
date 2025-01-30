@@ -18,9 +18,8 @@ mail = Mail()
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-    # app.config["JWT_SECRET_KEY"] = app.config["JWT_SECRET_KEY"]
-    jwt = JWTManager(app)
 
+    JWTManager(app)
     CORS(app)
 
     mongo.init_app(app)
@@ -42,7 +41,8 @@ def create_app():
     app.register_blueprint(tasks, url_prefix='/tasks')
 
     with app.app_context():
-        create_default_user(app.config["DEFAULT_ADMIN_EMAIL"], app.config["DEFAULT_ADMIN_PASSWORD"])
+        create_default_user(
+            app.config["DEFAULT_ADMIN_EMAIL"], app.config["DEFAULT_ADMIN_PASSWORD"])
 
     return app
 

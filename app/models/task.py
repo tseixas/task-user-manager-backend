@@ -50,6 +50,7 @@ class Task:
         return [{
             '_id': str(task['_id']),
             'title': task['title'],
+            'description': task['description'],
             'due_date': task['due_date'],
             'status': task['status']
         } for task in tasks]
@@ -72,11 +73,16 @@ class Task:
         if status:
             update_data['status'] = status
 
+        today = datetime.today().date()
+
+        if due_date < today:
+            update_data['status'] = 'overdue'
+
         result = mongo.db.tasks.update_one(
-            {'task_id': task_id}, {'$set': update_data})
+            {'_id': ObjectId(task_id)}, {'$set': update_data})
 
         if result.matched_count > 0:
-            return mongo.db.tasks.find_one({'_id': ObjectId(task_id)})
+            return True
 
         return None
 

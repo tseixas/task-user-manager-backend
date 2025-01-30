@@ -9,6 +9,7 @@ class Config:
     REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
     REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
     FLASK_ENV = os.getenv("FLASK_ENV", "production")
+    DEBUG = os.getenv("FLASK_DEBUG", "1")
     MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp.gmail.com")
     MAIL_PORT = int(os.getenv("MAIL_PORT", 587))
     MAIL_USE_TLS = os.getenv("MAIL_USE_TLS", "True").lower() == "true"

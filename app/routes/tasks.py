@@ -1,17 +1,23 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
+from datetime import datetime
 from app.models.task import Task
 
 tasks = Blueprint('tasks', __name__)
 
 
-@tasks.route('/', methods=['POST'])
+@tasks.route('/', methods=['GET', 'POST'])
 @jwt_required()
 def create_task():
     data = request.get_json()
     title = data.get('title')
     description = data.get('description')
-    due_date = data.get('due_date')
+    due_date = datetime.strptime(data['due_date'], "%Y-%m-%d").date()
+
+    today = datetime.today().date()
+
+    if due_date < today:
+        return jsonify({"error": "Invalid date"}), 400
 
     if not title or not description or not due_date:
         return jsonify({'error': 'Missing required fields'}), 400
@@ -21,12 +27,12 @@ def create_task():
     return jsonify({'task_id': task['task_id'], 'title': task['title'], 'due_date': task['due_date']}), 201
 
 
-@tasks.route('/', methods=['GET'])
+@tasks.route('/all', methods=['GET'])
 @jwt_required()
 def get_tasks():
-    tasks = Task.get_all_tasks()
+    response = Task.get_all_tasks()
 
-    return jsonify(tasks), 200
+    return jsonify(response), 200
 
 
 @tasks.route('/<task_id>', methods=['GET'])
@@ -46,8 +52,13 @@ def update_task(task_id):
     data = request.get_json()
     title = data.get('title')
     description = data.get('description')
-    due_date = data.get('due_date')
     status = data.get('status')
+    due_date = datetime.strptime(data['due_date'], "%Y-%m-%d").date()
+
+    today = datetime.today().date()
+
+    if due_date < today:
+        return jsonify({"error": "Invalid date"}), 400
 
     task = Task.update_task(task_id, title, description, due_date, status)
 
