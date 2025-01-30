@@ -19,7 +19,8 @@ def login():
     if user and user.verify_password(password):
         redis_client = current_app.redis_client
 
-        token = create_access_token(identity=email, expires_delta=timedelta(minutes=5))
+        token = create_access_token(
+            identity=email, expires_delta=timedelta(minutes=5))
 
         redis_client.setex(f"jwt:{email}", 300, token)
 
@@ -79,8 +80,7 @@ def logout():
 #     redis_client = current_app.redis_client
 #     redis_client.setex(f"reset_token:{email}", 3600, reset_token)
 
-#     # Aqui, você pode enviar o token por e-mail ao usuário (não implementado aqui)
-#     # Exemplo: send_email(email, reset_token)  # Função fictícia para enviar o e-mail
+#     # TODO: enviar email
 
 #     return jsonify({'reset_token': reset_token}), 200
 
@@ -89,12 +89,8 @@ def logout():
 # def request_password_reset():
 #     email = request.json.get("email")
 
-#     # Aqui você verificaria se o e-mail está registrado na base de dados
-#     # Se o e-mail estiver registrado, gera o token e envia o e-mail
 #     if email:
 #         token = generate_reset_token(email)
-
-#         print(token)
 
 #         return jsonify({"message": "E-mail de redefinição enviado."}), 200
 #     else:
@@ -111,7 +107,6 @@ def logout():
 #     if email:
 #         new_password = request.json.get("new_password")
 
-#         print(new_password)
 #         mongo.db.users.update_one(
 #             {"email": email}, {"$set": {"password": hash_password(new_password)}})
 
