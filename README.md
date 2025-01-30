@@ -4,7 +4,7 @@
 Este projeto é uma aplicação desenvolvido com Python, Flask, Redis e MongoDB.
 
 ## 💻 Funcionalidades
-- Logine Logout
+- Login e Logout
 - Redefinição de senha (Em breve)
 - Listagem de Tarefas
 - Cadastro de Tarefas
